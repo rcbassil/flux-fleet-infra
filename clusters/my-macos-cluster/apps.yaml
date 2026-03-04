@@ -8,7 +8,7 @@ spec:
   interval: 10m
   path: ./apps/overlays/dev # <--- Points to the Dev Overlay
   prune: true
-  wait: true
+#  wait: true
   sourceRef:
     kind: GitRepository
     name: flux-system
