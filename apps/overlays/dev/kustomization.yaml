@@ -5,3 +5,14 @@ resources:
 namePrefix: dev-
 commonLabels:
   env: development
+patches:
+  - target:
+      kind: HelmRelease
+      name: my-app
+    patch: |
+      - op: replace
+        path: /spec/values/ui/color
+        value: "#dev-blue"
+      - op: add
+        path: /spec/values/replicaCount
+        value: 1

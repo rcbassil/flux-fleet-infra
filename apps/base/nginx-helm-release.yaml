@@ -1,0 +1,19 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: my-nginx
+  namespace: flux-system # The controller lives here
+spec:
+  releaseName: nginx-server
+  targetNamespace: web-apps # The app will be installed here
+  interval: 15m
+  chart:
+    spec:
+      chart: nginx
+      version: "18.x.x" # Uses semver to stay on version 18
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami-repo
+  values:
+    service:
+      type: ClusterIP # Default for internal use

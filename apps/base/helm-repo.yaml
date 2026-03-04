@@ -1,0 +1,9 @@
+# apps/base/helm-repo.yaml
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: bitnami-repo
+  namespace: flux-system
+spec:
+  interval: 1h # How often to check for new chart versions
+  url: https://charts.bitnami.com/bitnami

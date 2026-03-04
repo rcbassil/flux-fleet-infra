@@ -1,13 +1,16 @@
+# clusters/dev/apps.yaml
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: web-app-production
+  name: dev-apps-sync
   namespace: flux-system
 spec:
-  interval: 10m0s
-  path: ./apps/overlays/dev
+  interval: 10m
+  path: ./apps/overlays/dev # <--- Points to the Dev Overlay
   prune: true
+  wait: true
   sourceRef:
     kind: GitRepository
     name: flux-system
+  # This ensures all apps in this sync go to the right namespace
   targetNamespace: dev-apps
