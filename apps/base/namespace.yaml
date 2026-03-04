@@ -1,4 +1,4 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: dev-apps # This should match your targetNamespace
+  name: web-apps # This should match your targetNamespace
