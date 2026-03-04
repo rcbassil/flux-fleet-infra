@@ -5,24 +5,10 @@ resources:
 namePrefix: dev-
 commonLabels:
   env: development
-
-# FIX: Prevent Kustomize from prefixing the HelmRepository name
-# so the HelmRelease sourceRef can still find it.
-transformers:
-  - |-
-    apiVersion: builtin
-    kind: PrefixSuffixTransformer
-    metadata:
-      name: custom-prefixer
-    prefix: dev-
-    skipTemplates:
-      - kind: HelmRepository
-        name: bitnami-repo
-
 patches:
   - target:
       kind: HelmRelease
-      name: my-nginx # Kustomize is smart enough to find the prefixed version here
+      name: my-nginx
     patch: |
       - op: replace
         path: /spec/values/replicaCount
