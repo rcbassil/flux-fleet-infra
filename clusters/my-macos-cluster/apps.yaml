@@ -12,5 +12,3 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  # This ensures all apps in this sync go to the right namespace
-  targetNamespace: dev-apps
