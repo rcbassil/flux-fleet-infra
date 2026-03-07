@@ -5,11 +5,13 @@ resources:
 namePrefix: dev-
 commonLabels:
   env: development
-patches:
-  - target:
-      kind: HelmRelease
-      name: my-nginx
-    patch: |
-      - op: replace
-        path: /spec/values/replicaCount
-        value: 1
+# Generate a new version of the ConfigMap for Dev
+configMapGenerator:
+  - name: nginx-values
+    namespace: flux-system
+    behavior: replace # <--- This replaces the base ConfigMap
+    files:
+      - nginx-values.yaml   # Points to the file we just created above
+
+# You can now REMOVE the patches block for replicaCount 
+# since it's handled in the values.yaml file.
