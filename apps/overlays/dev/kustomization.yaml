@@ -12,6 +12,11 @@ configMapGenerator:
     behavior: replace # <--- This replaces the base ConfigMap
     files:
       - nginx-values.yaml   # Points to the file we just created above
-
-# You can now REMOVE the patches block for replicaCount 
-# since it's handled in the values.yaml file.
+# This tells Kustomize to update the name inside HelmRelease spec
+configurations:
+  - |-
+    nameReference:
+    - kind: ConfigMap
+      fieldSpecs:
+      - path: spec/valuesFrom/name
+        kind: HelmRelease
