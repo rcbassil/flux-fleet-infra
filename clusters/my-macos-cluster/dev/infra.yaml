@@ -1,14 +1,12 @@
-# clusters/dev/apps.yaml
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: dev-apps-sync
+  name: dev-infra-sync
   namespace: flux-system
 spec:
-  interval: 10m
-  path: ./apps/overlays/dev # <--- Points to the Dev Overlay
+  interval: 1h
+  path: /../apps/infrastructure/dev # Points to the new folder
   prune: true
-#  wait: true
   sourceRef:
     kind: GitRepository
     name: flux-system
