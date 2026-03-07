@@ -11,7 +11,7 @@ configMapGenerator:
     namespace: flux-system
     behavior: replace # <--- This replaces the base ConfigMap
     files:
-      - values.yaml
+      - nginx-values.yaml   # Points to the file we just created above
 # Manually tell the HelmRelease to look for the prefixed ConfigMap
 patches:
   - target:
@@ -20,4 +20,4 @@ patches:
     patch: |
       - op: replace
         path: /spec/valuesFrom/0/name
-        value: dev-nginx-values
+        value: dev-values
