@@ -2,3 +2,5 @@ service:
   type: ClusterIP
 replicaCount: 1
 # Any other dev-specific overrides go here
+commonAnnotations:
+  redeploy-timestamp: "${REDEPLOY_TIME}" # Or any unique string
