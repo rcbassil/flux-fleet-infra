@@ -27,4 +27,4 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: nginx-values
-      valuesKey: values.yaml
+      valuesKey: nginx-values.yaml
