@@ -7,6 +7,14 @@ spec:
   releaseName: nginx-server
   targetNamespace: web-apps # The app will be installed here
   interval: 15m
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+    # This force-triggers a rollout if the values change
+    force: true
   chart:
     spec:
       chart: nginx
@@ -14,15 +22,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: bitnami-repo
-        namespace: flux-system
-      install:
-        remediation:
-          retries: 3
-      upgrade:
-        remediation:
-          retries: 3
-      # This force-triggers a rollout if the values change
-      force: true  
+        namespace: flux-system  
   # This replaces the "values:" block
   valuesFrom:
     - kind: ConfigMap
