@@ -20,4 +20,4 @@ patches:
     patch: |
       - op: replace
         path: /spec/valuesFrom/0/name
-        value: dev-values
+        value: dev-nginx-values

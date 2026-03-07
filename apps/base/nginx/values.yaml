@@ -4,7 +4,7 @@ metadata:
   name: nginx-values
   namespace: flux-system
 data:
-  values.yaml: |
+  nginx-values.yaml: |
     replicaCount: 2
     service:
       type: ClusterIP
