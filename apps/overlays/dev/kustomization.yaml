@@ -14,6 +14,8 @@ configMapGenerator:
     behavior: replace # <--- This replaces the base ConfigMap
     files:
       - nginx-values.yaml   # Points to the file we just created above
+    options:
+      disableNameSuffixHash: true
   - name: vault-values
     namespace: flux-system
     #behavior: replace
@@ -26,6 +28,8 @@ configMapGenerator:
     #behavior: replace
     files:
       - vault-operator-values.yaml
+    options:
+      disableNameSuffixHash: true
 # Manually tell the HelmRelease to look for the prefixed ConfigMap
 patches:
   - target:
