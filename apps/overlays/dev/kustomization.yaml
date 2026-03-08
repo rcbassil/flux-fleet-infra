@@ -4,8 +4,6 @@ resources:
   - ../../base/nginx
   - ../../base/vault           # New
   - ../../base/vault-operator  # New
-  - ../../base/vault-operator/connection.yaml
-  - ../../base/vault-operator/auth.yaml
 namePrefix: dev-
 commonLabels:
   env: development
