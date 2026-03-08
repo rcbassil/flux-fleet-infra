@@ -5,5 +5,5 @@ metadata:
   namespace: vault-system
 spec:
   # The internal Kubernetes DNS for your Vault service
-  address: http://dev-vault.vault-system.svc.cluster.local:8200
+  address: http://vault.vault-system.svc.cluster.local:8200
   skipTLSVerify: true
