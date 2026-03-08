@@ -1,0 +1,23 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: vso-global-reader
+rules:
+- apiGroups: ["secrets.hashicorp.com"]
+  resources: ["vaultauthglobals", "vaultconnections"]
+  verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vso-global-reader-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: vso-global-reader
+subjects:
+- kind: ServiceAccount
+  name: vault-secrets-operator # Must match your Operator SA name
+  namespace: vault-system

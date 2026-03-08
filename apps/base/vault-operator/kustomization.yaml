@@ -6,3 +6,4 @@ resources:
   #- auth.yaml
   - connection.yaml
   - auth-global.yaml
+  - rbac-global.yaml
