@@ -62,11 +62,11 @@ patches:
     patch: |
       - op: replace
         path: /spec/vaultAuthRef
-        value: dev-static-auth-global
+        value: dev-static-auth
   - target:
-      kind: VaultAuthGlobal
-      name: static-auth-global
+      kind: VaultAuth
+      name: static-auth
     patch: |
       - op: replace
         path: /spec/vaultConnectionRef
-        value: dev-vault-connection
+        value: vault-system/dev-vault-connection

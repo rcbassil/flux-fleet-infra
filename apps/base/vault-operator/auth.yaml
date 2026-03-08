@@ -1,12 +1,13 @@
 apiVersion: secrets.hashicorp.com/v1beta1
 kind: VaultAuth
 metadata:
-  name: vault-auth
-  namespace: vault-system
+  name: static-auth # Matching the name the error is looking for
+  namespace: web-apps         # Moving it into the app's home
 spec:
   method: kubernetes
-  mount: kubernetes # The path where K8s auth is enabled in Vault
-  vaultConnectionRef: vault-connection # This placeholder gets patched to 'dev-vault-connection'
+  mount: kubernetes
+  # Point this to the connection in the vault-system namespace
+  vaultConnectionRef: vault-system/dev-vault-connection 
   kubernetes:
-    role: vso-role # The role we will create inside Vault
-    serviceAccount: dev-vault-secrets-operator # The VSO service account
+    role: vso-role
+    serviceAccount: dev-vault-secrets-operator # The SA in the 'web-apps' namespace

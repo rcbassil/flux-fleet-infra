@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
   - release.yaml
   - values.yaml
-  #- auth.yaml
+  - auth.yaml
   - connection.yaml
-  - auth-global.yaml
   - rbac-global.yaml
