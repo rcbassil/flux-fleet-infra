@@ -11,17 +11,17 @@ commonLabels:
 configMapGenerator:
   - name: nginx-values
     namespace: flux-system
-    behavior: replace # <--- This replaces the base ConfigMap
+    #behavior: replace # <--- This replaces the base ConfigMap
     files:
       - nginx-values.yaml   # Points to the file we just created above
   - name: vault-values
     namespace: flux-system
-    behavior: replace
+    #behavior: replace
     files:
       - vault-values.yaml
   - name: vault-operator-values
     namespace: flux-system
-    behavior: replace
+    #behavior: replace
     files:
       - vault-operator-values.yaml
 # Manually tell the HelmRelease to look for the prefixed ConfigMap
