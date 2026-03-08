@@ -56,4 +56,18 @@ patches:
       - op: replace
         path: /spec/dependsOn/0/name
         value: dev-vault
+  - target:
+      kind: VaultStaticSecret
+      name: nginx-db-secret
+    patch: |
+      - op: replace
+        path: /spec/vaultAuthRef # Point to the Auth object instead
+        value: dev-vault-auth
+  - target:
+      kind: VaultAuth
+      name: vault-auth
+    patch: |
+      - op: replace
+        path: /spec/vaultConnectionRef
+        value: dev-vault-connection
 

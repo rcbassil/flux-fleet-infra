@@ -6,6 +6,7 @@ metadata:
 spec:
   method: kubernetes
   mount: kubernetes # The path where K8s auth is enabled in Vault
+  vaultConnectionRef: vault-connection # This placeholder gets patched to 'dev-vault-connection'
   kubernetes:
     role: vso-role # The role we will create inside Vault
     serviceAccount: dev-vault-secrets-operator # The VSO service account
