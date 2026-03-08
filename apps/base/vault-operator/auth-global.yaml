@@ -1,0 +1,12 @@
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultAuthGlobal
+metadata:
+  name: static-auth-global
+  namespace: vault-system
+spec:
+  method: kubernetes
+  mount: kubernetes
+  vaultConnectionRef: vault-connection # Local ref within the same namespace
+  kubernetes:
+    role: vso-role
+    serviceAccount: dev-vault-secrets-operator

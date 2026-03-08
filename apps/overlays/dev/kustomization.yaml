@@ -62,7 +62,7 @@ patches:
     patch: |
       - op: replace
         path: /spec/vaultAuthRef # Point to the Auth object instead
-        value: dev-vault-auth
+        value: vault-system/static-auth-global
   - target:
       kind: VaultAuth
       name: vault-auth
