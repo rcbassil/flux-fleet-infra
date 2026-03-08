@@ -47,4 +47,7 @@ patches:
       - op: replace
         path: /spec/valuesFrom/0/name
         value: dev-vault-operator-values
+      - op: replace
+        path: /spec/dependsOn/0/name
+        value: dev-vault
 
