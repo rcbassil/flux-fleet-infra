@@ -2,6 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../base/nginx
+  - ../../base/vault           # New
+  - ../../base/vault-operator  # New
 namePrefix: dev-
 commonLabels:
   env: development
@@ -12,6 +14,16 @@ configMapGenerator:
     behavior: replace # <--- This replaces the base ConfigMap
     files:
       - nginx-values.yaml   # Points to the file we just created above
+  - name: vault-values
+    namespace: flux-system
+    behavior: replace
+    files:
+      - vault-values.yaml
+  - name: vault-operator-values
+    namespace: flux-system
+    behavior: replace
+    files:
+      - vault-operator-values.yaml
 # Manually tell the HelmRelease to look for the prefixed ConfigMap
 patches:
   - target:
@@ -21,3 +33,18 @@ patches:
       - op: replace
         path: /spec/valuesFrom/0/name
         value: dev-nginx-values
+  - target:
+      kind: HelmRelease
+      name: vault
+    patch: |
+      - op: replace
+        path: /spec/valuesFrom/0/name
+        value: dev-vault-values
+  - target:
+      kind: HelmRelease
+      name: vault-secrets-operator
+    patch: |
+      - op: replace
+        path: /spec/valuesFrom/0/name
+        value: dev-vault-operator-values
+

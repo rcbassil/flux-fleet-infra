@@ -3,4 +3,6 @@ kind: Kustomization
 
 resources:
   - sources/bitnami-repo.yaml  # Reference the repo here instead of in the apps base
+  - sources/hashicorp-repo.yaml
   - namespaces/web-apps.yaml
+  - namespaces/vault-system.yaml
