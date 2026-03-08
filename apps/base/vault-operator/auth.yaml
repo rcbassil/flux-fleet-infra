@@ -10,4 +10,4 @@ spec:
   vaultConnectionRef: vault-system/dev-vault-connection 
   kubernetes:
     role: vso-role
-    serviceAccount: dev-vault-secrets-operator # The SA in the 'web-apps' namespace
+    serviceAccount: default # The SA in the 'web-apps' namespace
