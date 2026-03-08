@@ -1,7 +1,7 @@
 apiVersion: secrets.hashicorp.com/v1beta1
 kind: VaultAuth
 metadata:
-  name: static-auth # Matching the name the error is looking for
+  name: static-auth
   namespace: web-apps         # Moving it into the app's home
 spec:
   method: kubernetes

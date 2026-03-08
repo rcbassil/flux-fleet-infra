@@ -4,3 +4,4 @@ resources:
   - release.yaml
   - values.yaml
   - db-secret.yaml
+  - vault-auth.yaml
