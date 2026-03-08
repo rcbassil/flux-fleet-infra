@@ -3,3 +3,5 @@ kind: Kustomization
 resources:
   - release.yaml
   - values.yaml
+  - auth.yaml
+  - connection.yaml
