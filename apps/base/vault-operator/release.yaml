@@ -6,7 +6,7 @@ metadata:
 spec:
   releaseName: vault-secrets-operator
   targetNamespace: vault-system
-  interval: 1h
+  interval: 30m
   dependsOn:
     - name: vault # Ensures Vault is up before the operator tries to connect
   chart:
