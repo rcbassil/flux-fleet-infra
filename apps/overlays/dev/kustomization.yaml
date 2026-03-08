@@ -70,4 +70,3 @@ patches:
       - op: replace
         path: /spec/vaultConnectionRef
         value: dev-vault-connection
-
