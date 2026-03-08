@@ -11,7 +11,7 @@ commonLabels:
 configMapGenerator:
   - name: nginx-values
     namespace: flux-system
-    #behavior: replace # <--- This replaces the base ConfigMap
+    behavior: replace # <--- This replaces the base ConfigMap
     files:
       - nginx-values.yaml   # Points to the file we just created above
   - name: vault-values
