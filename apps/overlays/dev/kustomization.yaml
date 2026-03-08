@@ -60,9 +60,9 @@ patches:
       kind: VaultStaticSecret
       name: nginx-db-secret
     patch: |
-      - op: add
+      - op: replace
         path: /spec/vaultAuthRef # Point to the Auth object instead
-        value: "dev-vault-auth"
+        value: dev-vault-auth
   - target:
       kind: VaultAuth
       name: vault-auth
