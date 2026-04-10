@@ -14,7 +14,7 @@ spec:
     remediation:
       retries: 3
     # This force-triggers a rollout if the values change
-    force: true
+    #force: true
   chart:
     spec:
       chart: nginx
@@ -22,7 +22,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: bitnami-repo
-        namespace: flux-system  
+        namespace: flux-system
   # This replaces the "values:" block
   valuesFrom:
     - kind: ConfigMap

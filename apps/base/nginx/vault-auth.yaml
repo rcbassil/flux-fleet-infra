@@ -2,12 +2,12 @@ apiVersion: secrets.hashicorp.com/v1beta1
 kind: VaultAuth
 metadata:
   name: static-auth
-  namespace: web-apps         # Moving it into the app's home
+  namespace: web-apps # Moving it into the app's home
 spec:
   method: kubernetes
   mount: kubernetes
   # Point this to the connection in the vault-system namespace
-  vaultConnectionRef: vault-system/dev-vault-connection 
+  vaultConnectionRef: vault-system/dev-vault-connection
   kubernetes:
     role: vso-role
-    serviceAccount: default # The SA in the 'web-apps' namespace
+    serviceAccount: nginx-server # The SA in the 'web-apps' namespace
