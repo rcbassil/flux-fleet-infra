@@ -1,3 +1,9 @@
 server:
   dev:
     enabled: false
+  dataStorage:
+    enabled: true
+    size: "10Gi"
+    mountPath: "/vault/data"
+    storageClass: "standard"
+    accessMode: ReadWriteOnce
