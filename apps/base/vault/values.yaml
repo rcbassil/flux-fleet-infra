@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-values
+  namespace: flux-system
+data:
+  vault-values.yaml: |
+    server:
+      dataStorage:
+        enabled: true
+        size: "10Gi"
+        mountPath: "/vault/data"
+        storageClass: "standard"
+        accessMode: ReadWriteOnce
