@@ -2,6 +2,25 @@
 
 ## [Unreleased]
 
+## 2026-04-11
+
+### Changed
+- Refactored base/overlay ConfigMap pattern: base ConfigMaps now use a `defaults.yaml` key with real environment-agnostic defaults; overlays add an `overrides.yaml` key via `behavior: merge`, so base values are genuinely inherited rather than replaced.
+- All three HelmReleases (vault, vault-operator, nginx) updated to read `defaults.yaml` then `overrides.yaml` (`optional: true`) via two `valuesFrom` entries.
+- Overlay values files trimmed to env-specific overrides only — removed duplication of base defaults.
+- `skipTLSVerify` moved from hardcoded `true` in base `VaultConnection` to `false` in base, patched to `true` by the dev overlay only.
+- Vault-operator base `values.yaml` was empty — now defines `defaultVaultConnection.enabled: true` as a real default.
+- Added `remediation.retries: 3` on install and upgrade to the Vault HelmRelease, consistent with NGINX.
+- Added `wait: true` and `dependsOn: dev-infra-sync` to `apps.yaml` to enforce correct sync ordering and health gating.
+- Fixed `metadata.name` / `releaseName` mismatch on the NGINX HelmRelease (both are now `nginx-server`).
+- Fixed non-standard path prefixes in `infra.yaml` and `apps.yaml` (`/../` → `./`).
+- Removed stale and dead-code comments across release files.
+
+### Added
+- Vault chart upgraded from `0.28.x` to `0.29.x` to address 27 HIGH/CRITICAL CVEs (including CVE-2024-41110 CRITICAL in docker/docker).
+- Persistent storage enabled for Vault: 10Gi PVC on `standard` StorageClass (minikube), with `storageClass` defaulting to `""` in base for portability.
+- `affinity: ""` added to Vault server and injector in dev overlay to allow scheduling on single-node minikube clusters.
+
 ## 2026-04-10
 
 ### Fixed

@@ -1,7 +1,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: my-nginx
+  name: nginx-server
   namespace: flux-system # The controller lives here
 spec:
   releaseName: nginx-server
@@ -18,13 +18,16 @@ spec:
   chart:
     spec:
       chart: nginx
-      version: "22.x.x" # Uses semver to stay on version 18
+      version: "22.x.x"
       sourceRef:
         kind: HelmRepository
         name: bitnami-repo
         namespace: flux-system
-  # This replaces the "values:" block
   valuesFrom:
     - kind: ConfigMap
       name: nginx-values
-      valuesKey: nginx-values.yaml
+      valuesKey: defaults.yaml
+    - kind: ConfigMap
+      name: nginx-values
+      valuesKey: overrides.yaml
+      optional: true

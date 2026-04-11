@@ -17,8 +17,11 @@ spec:
         kind: HelmRepository
         name: hashicorp-repo
         namespace: flux-system
-    # This replaces the "values:" block
   valuesFrom:
     - kind: ConfigMap
       name: vault-operator-values
-      valuesKey: vault-operator-values.yaml
+      valuesKey: defaults.yaml
+    - kind: ConfigMap
+      name: vault-operator-values
+      valuesKey: overrides.yaml
+      optional: true

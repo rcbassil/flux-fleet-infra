@@ -11,7 +11,7 @@ GitOps repository for managing Kubernetes applications using [FluxCD](https://fl
 │       ├── flux-system/          # Flux bootstrap manifests (generated)
 │       └── dev/
 │           ├── infra.yaml        # Syncs apps/infrastructure/dev (1h interval)
-│           └── apps.yaml         # Syncs apps/overlays/dev (10m interval)
+│           └── apps.yaml         # Syncs apps/overlays/dev (10m interval), depends on infra
 └── apps/
     ├── base/                     # Environment-agnostic Helm release definitions
     │   ├── vault/
@@ -29,7 +29,7 @@ GitOps repository for managing Kubernetes applications using [FluxCD](https://fl
 
 | App | Chart | Namespace | Version |
 |-----|-------|-----------|---------|
-| [Vault](apps/base/vault/) | hashicorp/vault | vault-system | 0.28.x |
+| [Vault](apps/base/vault/) | hashicorp/vault | vault-system | 0.29.x |
 | [Vault Secrets Operator](apps/base/vault-operator/) | hashicorp/vault-secrets-operator | vault-system | 0.9.x |
 | [NGINX](apps/base/nginx/) | bitnami/nginx | web-apps | 22.x.x |
 
@@ -37,31 +37,53 @@ GitOps repository for managing Kubernetes applications using [FluxCD](https://fl
 
 ### Base/Overlay Pattern
 
-Each app in `apps/base/` defines a `HelmRelease` and a `ConfigMap` of default Helm values. Environment overlays in `apps/overlays/<env>/` patch those definitions — applying a `namePrefix`, swapping ConfigMap references, and injecting environment-specific values via `configMapGenerator`.
+Each app in `apps/base/` defines a `HelmRelease` and a `ConfigMap` with a `defaults.yaml` key containing environment-agnostic Helm values. Environment overlays in `apps/overlays/<env>/` use `configMapGenerator` with `behavior: merge` to add an `overrides.yaml` key on top — so base defaults are always inherited and only env-specific values need to be listed in the overlay.
+
+Each `HelmRelease` reads both keys in order via two `valuesFrom` entries:
+
+```yaml
+valuesFrom:
+  - kind: ConfigMap
+    name: app-values
+    valuesKey: defaults.yaml    # base defaults, always present
+  - kind: ConfigMap
+    name: app-values
+    valuesKey: overrides.yaml   # env-specific overrides, optional
+    optional: true
+```
 
 ### Infrastructure Before Apps
 
 The cluster's dev entrypoint has two Flux `Kustomization` resources:
 
 1. **`infra.yaml`** — reconciles every 1h, ensures namespaces and `HelmRepository` sources exist first.
-2. **`apps.yaml`** — reconciles every 10m, depends on infra being ready.
+2. **`apps.yaml`** — reconciles every 10m, explicitly depends on infra via `dependsOn`, and waits for all HelmReleases to be healthy via `wait: true`.
 
 ### Vault Integration
 
 NGINX pulls database credentials from Vault using the Vault Secrets Operator:
 
 ```
-VaultConnection (cluster-wide)
+VaultConnection (cluster-wide, skipTLSVerify patched per env)
     └── VaultAuth (per namespace, Kubernetes auth method)
             └── VaultStaticSecret (per app, synced every 1h)
                     └── Kubernetes Secret (consumed by the pod)
 ```
 
+`skipTLSVerify` defaults to `false` in base. The dev overlay patches it to `true` for minikube. A production overlay would leave it unpatched, keeping TLS verification enabled.
+
 RBAC is defined in [apps/base/vault-operator/rbac-global.yaml](apps/base/vault-operator/rbac-global.yaml) to allow VSO to read `VaultConnection` resources across namespaces.
 
 ### Persistent Storage (Vault)
 
-Vault data is stored on a 10Gi `PersistentVolumeClaim` using the `standard` StorageClass (minikube's hostPath provisioner). Data lands inside the minikube VM at `/tmp/hostpath-provisioner/vault-system/`. See [apps/base/vault/README.md](apps/base/vault/README.md) for details.
+Vault data is stored on a 10Gi `PersistentVolumeClaim`. The `storageClass` defaults to `""` (cluster default) in base. The dev overlay sets it to `standard` (minikube's hostPath provisioner). Data lands inside the minikube VM at `/tmp/hostpath-provisioner/vault-system/`. See [apps/base/vault/README.md](apps/base/vault/README.md) for details.
+
+After any Vault pod restart, Vault comes back sealed and must be manually unsealed:
+
+```sh
+kubectl exec -n vault-system vault-0 -- vault operator unseal <key>
+# repeat with 3 of your 5 unseal keys
+```
 
 ## Prerequisites
 
@@ -86,6 +108,10 @@ Once bootstrapped, Flux will reconcile all infrastructure and applications autom
 
 ## Adding a New Application
 
-1. Create `apps/base/<app>/` with a `release.yaml` (HelmRelease), `values.yaml` (ConfigMap), and `kustomization.yaml`.
-2. Add environment-specific values to `apps/overlays/dev/<app>-values.yaml` and reference them in the overlay `kustomization.yaml`.
-3. If the app needs a new Helm source, add a `HelmRepository` under `apps/infrastructure/dev/sources/`.
+1. Create `apps/base/<app>/` with:
+   - `release.yaml` — HelmRelease with two `valuesFrom` entries (`defaults.yaml` and `overrides.yaml`)
+   - `values.yaml` — ConfigMap with a `defaults.yaml` key containing base Helm values
+   - `kustomization.yaml` — listing both files as resources
+2. Add `apps/overlays/dev/<app>-values.yaml` with only dev-specific overrides, and wire it into the overlay `kustomization.yaml` using `behavior: merge` and `overrides.yaml=<app>-values.yaml`.
+3. Add patches to `apps/overlays/dev/kustomization.yaml` to update both `valuesFrom[0].name` and `valuesFrom[1].name` to the `dev-`-prefixed ConfigMap name.
+4. If the app needs a new Helm source, add a `HelmRepository` under `apps/infrastructure/dev/sources/`.

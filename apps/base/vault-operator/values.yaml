@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-operator-values
+  namespace: flux-system
+data:
+  defaults.yaml: |
+    defaultVaultConnection:
+      enabled: true

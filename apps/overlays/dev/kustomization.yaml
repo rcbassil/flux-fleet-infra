@@ -2,8 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../base/nginx
-  - ../../base/vault           # New
-  - ../../base/vault-operator  # New
+  - ../../base/vault
+  - ../../base/vault-operator
 namePrefix: dev-
 commonLabels:
   env: development
@@ -11,32 +11,36 @@ commonLabels:
 configMapGenerator:
   - name: nginx-values
     namespace: flux-system
-    behavior: replace # <--- This replaces the base ConfigMap
+    behavior: merge
     files:
-      - nginx-values.yaml   # Points to the file we just created above
+      - overrides.yaml=nginx-values.yaml # adds "overrides.yaml" key, base keeps "defaults.yaml"
     options:
       disableNameSuffixHash: true
   - name: vault-values
     namespace: flux-system
-    behavior: replace
+    behavior: merge
     files:
-      - vault-values.yaml
+      - overrides.yaml=vault-values.yaml # adds "overrides.yaml" key, base keeps "defaults.yaml"
     options:
       disableNameSuffixHash: true
   - name: vault-operator-values
     namespace: flux-system
+    behavior: merge
     files:
-      - vault-operator-values.yaml
+      - overrides.yaml=vault-operator-values.yaml # adds "overrides.yaml" key, base keeps "defaults.yaml"
     options:
       disableNameSuffixHash: true
 # Manually tell the HelmRelease to look for the prefixed ConfigMap
 patches:
   - target:
       kind: HelmRelease
-      name: my-nginx
+      name: nginx-server
     patch: |
       - op: replace
         path: /spec/valuesFrom/0/name
+        value: dev-nginx-values
+      - op: replace
+        path: /spec/valuesFrom/1/name
         value: dev-nginx-values
   - target:
       kind: HelmRelease
@@ -44,6 +48,9 @@ patches:
     patch: |
       - op: replace
         path: /spec/valuesFrom/0/name
+        value: dev-vault-values
+      - op: replace
+        path: /spec/valuesFrom/1/name
         value: dev-vault-values
   - target:
       kind: HelmRelease
@@ -53,8 +60,18 @@ patches:
         path: /spec/valuesFrom/0/name
         value: dev-vault-operator-values
       - op: replace
+        path: /spec/valuesFrom/1/name
+        value: dev-vault-operator-values
+      - op: replace
         path: /spec/dependsOn/0/name
         value: dev-vault
+  - target:
+      kind: VaultConnection
+      name: vault-connection
+    patch: |
+      - op: replace
+        path: /spec/skipTLSVerify
+        value: true
   - target:
       kind: VaultStaticSecret
       name: nginx-db-secret

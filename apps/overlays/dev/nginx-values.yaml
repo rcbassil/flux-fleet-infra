@@ -1,6 +1,2 @@
-service:
-  type: ClusterIP
+# Dev-specific overrides — base defaults.yaml provides replicaCount: 2 and service type
 replicaCount: 1
-# Any other dev-specific overrides go here
-commonAnnotations:
-  redeploy-timestamp: "${REDEPLOY_TIME}" # Or any unique string

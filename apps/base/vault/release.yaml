@@ -7,6 +7,12 @@ spec:
   releaseName: vault
   targetNamespace: vault-system # It's cleaner to isolate Vault
   interval: 15m
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
   chart:
     spec:
       chart: vault
@@ -18,4 +24,8 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: vault-values
-      valuesKey: vault-values.yaml
+      valuesKey: defaults.yaml
+    - kind: ConfigMap
+      name: vault-values
+      valuesKey: overrides.yaml
+      optional: true

@@ -5,7 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1h
-  path: /../apps/infrastructure/dev # Points to the new folder
+  path: ./apps/infrastructure/dev # Points to the new folder
   prune: true
   sourceRef:
     kind: GitRepository

@@ -6,4 +6,4 @@ metadata:
 spec:
   # The internal Kubernetes DNS for your Vault service
   address: http://vault.vault-system.svc.cluster.local:8200
-  skipTLSVerify: true
+  skipTLSVerify: false

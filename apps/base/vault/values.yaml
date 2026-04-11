@@ -4,7 +4,7 @@ metadata:
   name: vault-values
   namespace: flux-system
 data:
-  vault-values.yaml: |
+  defaults.yaml: |
     server:
       dataStorage:
         enabled: true
