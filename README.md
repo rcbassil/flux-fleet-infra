@@ -2,6 +2,12 @@
 
 GitOps repository for managing Kubernetes applications using [FluxCD](https://fluxcd.io/). Applications are defined as Helm releases composed with Kustomize, following a base/overlay pattern for environment-specific configuration.
 
+## Architecture
+
+![Architecture diagram](docs/architecture.svg)
+
+> Full interactive diagram: [docs/architecture.drawio](docs/architecture.drawio)
+
 ## Repository Structure
 
 ```
