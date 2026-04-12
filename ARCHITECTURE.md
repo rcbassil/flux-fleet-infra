@@ -139,7 +139,7 @@ flowchart LR
 ```
 flux-fleet-infra/
 ├── clusters/
-│   └── my-macos-cluster/
+│   └── my-local-cluster/
 │       ├── flux-system/          ← Flux bootstrap (generated, do not edit)
 │       └── dev/
 │           ├── infra.yaml        ← Kustomization → apps/infrastructure/dev

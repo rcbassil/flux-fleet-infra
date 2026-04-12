@@ -7,7 +7,7 @@ GitOps repository for managing Kubernetes applications using [FluxCD](https://fl
 ```
 .
 ├── clusters/
-│   └── my-macos-cluster/         # minikube local cluster
+│   └── my-local-cluster/         # minikube local cluster
 │       ├── flux-system/          # Flux bootstrap manifests (generated)
 │       └── dev/
 │           ├── infra.yaml        # Syncs apps/infrastructure/dev (1h interval)
