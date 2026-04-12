@@ -27,11 +27,11 @@ GitOps repository for managing Kubernetes applications using [FluxCD](https://fl
 
 ## Applications
 
-| App | Chart | Namespace | Version |
-|-----|-------|-----------|---------|
-| [Vault](apps/base/vault/) | hashicorp/vault | vault-system | 0.29.x |
-| [Vault Secrets Operator](apps/base/vault-operator/) | hashicorp/vault-secrets-operator | vault-system | 0.9.x |
-| [NGINX](apps/base/nginx/) | bitnami/nginx | web-apps | 22.x.x |
+| App                                                 | Chart                            | Namespace    | Version |
+| --------------------------------------------------- | -------------------------------- | ------------ | ------- |
+| [Vault](apps/base/vault/)                           | hashicorp/vault                  | vault-system | 0.29.x  |
+| [Vault Secrets Operator](apps/base/vault-operator/) | hashicorp/vault-secrets-operator | vault-system | 0.9.x   |
+| [NGINX](apps/base/nginx/)                           | bitnami/nginx                    | web-apps     | 22.x.x  |
 
 ## How It Works
 
@@ -45,10 +45,10 @@ Each `HelmRelease` reads both keys in order via two `valuesFrom` entries:
 valuesFrom:
   - kind: ConfigMap
     name: app-values
-    valuesKey: defaults.yaml    # base defaults, always present
+    valuesKey: defaults.yaml # base defaults, always present
   - kind: ConfigMap
     name: app-values
-    valuesKey: overrides.yaml   # env-specific overrides, optional
+    valuesKey: overrides.yaml # env-specific overrides, optional
     optional: true
 ```
 
@@ -97,10 +97,10 @@ kubectl exec -n vault-system vault-0 -- vault operator unseal <key>
 minikube start
 
 flux bootstrap github \
-  --owner=rcbassil \
+  --owner=<your-github-username> \
   --repository=flux-fleet-infra \
   --branch=main \
-  --path=clusters/my-macos-cluster \
+  --path=clusters/<your-cluster-name> \
   --personal
 ```
 
