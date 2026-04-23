@@ -1,13 +1,13 @@
-<mxfile host="app.diagrams.net" modified="2026-04-12T00:00:00.000Z" agent="Claude" version="21.0.0" type="device">
+<mxfile host="app.diagrams.net" modified="2026-04-23T00:00:00.000Z" agent="Claude" version="21.0.0" type="device">
   <diagram name="flux-fleet-infra" id="architecture">
-    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="1500" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
 
         <!-- Title -->
         <mxCell id="title" value="flux-fleet-infra · GitOps Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;fontColor=#1a1a2e;" vertex="1" parent="1">
-          <mxGeometry x="427" y="20" width="800" height="40" as="geometry" />
+          <mxGeometry x="600" y="20" width="900" height="40" as="geometry" />
         </mxCell>
 
         <!-- GitHub -->
@@ -21,103 +21,188 @@
           <mxGeometry x="60" y="115" width="160" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Flux System -->
+        <!-- Flux System box -->
         <mxCell id="flux_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;arcSize=5;" vertex="1" parent="1">
-          <mxGeometry x="320" y="60" width="620" height="380" as="geometry" />
+          <mxGeometry x="320" y="60" width="1360" height="440" as="geometry" />
         </mxCell>
         <mxCell id="flux_label" value="flux-system namespace" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#7d5c00;" vertex="1" parent="1">
-          <mxGeometry x="330" y="65" width="220" height="20" as="geometry" />
+          <mxGeometry x="330" y="65" width="260" height="20" as="geometry" />
         </mxCell>
 
         <!-- GitRepository -->
         <mxCell id="git_repo" value="GitRepository&#xa;flux-system&#xa;interval: 1m" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="350" y="95" width="150" height="60" as="geometry" />
+          <mxGeometry x="370" y="95" width="150" height="60" as="geometry" />
         </mxCell>
 
         <!-- Kustomizations -->
         <mxCell id="infra_kz" value="Kustomization&#xa;dev-infra-sync&#xa;interval: 1h · path: ./apps/infrastructure/dev" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="350" y="195" width="220" height="60" as="geometry" />
+          <mxGeometry x="370" y="200" width="250" height="60" as="geometry" />
         </mxCell>
         <mxCell id="apps_kz" value="Kustomization&#xa;dev-apps-sync&#xa;interval: 10m · wait: true · dependsOn: infra" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="620" y="195" width="230" height="60" as="geometry" />
+          <mxGeometry x="1230" y="200" width="260" height="60" as="geometry" />
         </mxCell>
 
-        <!-- HelmReleases -->
-        <mxCell id="hr_vault" value="HelmRelease&#xa;dev-vault&#xa;chart: vault 0.29.x" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="340" y="310" width="160" height="60" as="geometry" />
+        <!-- Infra sub-group background -->
+        <mxCell id="infra_group_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#cccccc;arcSize=5;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="335" y="285" width="840" height="190" as="geometry" />
         </mxCell>
-        <mxCell id="hr_vso" value="HelmRelease&#xa;dev-vault-secrets-operator&#xa;chart: vso 0.9.x" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="520" y="310" width="185" height="60" as="geometry" />
+        <mxCell id="infra_group_label" value="managed by dev-infra-sync" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=10;fontStyle=2;fontColor=#888888;" vertex="1" parent="1">
+          <mxGeometry x="340" y="288" width="220" height="16" as="geometry" />
         </mxCell>
+
+        <!-- Infra HelmReleases -->
+        <mxCell id="hr_vault" value="HelmRelease&#xa;vault&#xa;chart: vault 0.29.x" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="345" y="310" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="hr_vso" value="HelmRelease&#xa;vault-secrets-operator&#xa;chart: vso 0.9.x" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="525" y="310" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="hr_kuma" value="HelmRelease&#xa;kuma&#xa;chart: kuma 2.x.x" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="725" y="310" width="155" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="hr_kyverno" value="HelmRelease&#xa;kyverno&#xa;chart: kyverno 3.x.x" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="900" y="310" width="155" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- dependsOn note for vso -->
+        <mxCell id="vso_depends" value="dependsOn: vault" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;fontSize=9;fontStyle=2;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="525" y="373" width="180" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- Apps sub-group background -->
+        <mxCell id="apps_group_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#cccccc;arcSize=5;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1195" y="285" width="370" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="apps_group_label" value="managed by dev-apps-sync" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=10;fontStyle=2;fontColor=#888888;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="288" width="220" height="16" as="geometry" />
+        </mxCell>
+
+        <!-- Apps HelmRelease -->
         <mxCell id="hr_nginx" value="HelmRelease&#xa;dev-nginx-server&#xa;chart: nginx 22.x.x" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="720" y="310" width="160" height="60" as="geometry" />
+          <mxGeometry x="1270" y="310" width="170" height="60" as="geometry" />
         </mxCell>
 
-        <!-- ConfigMaps -->
-        <mxCell id="cm_vault" value="ConfigMap&#xa;dev-vault-values&#xa;defaults.yaml + overrides.yaml" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="340" y="400" width="160" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="cm_vso" value="ConfigMap&#xa;dev-vault-operator-values&#xa;defaults.yaml + overrides.yaml" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="520" y="400" width="185" height="50" as="geometry" />
-        </mxCell>
+        <!-- ConfigMap (nginx only) -->
         <mxCell id="cm_nginx" value="ConfigMap&#xa;dev-nginx-values&#xa;defaults.yaml + overrides.yaml" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="720" y="400" width="160" height="50" as="geometry" />
+          <mxGeometry x="1270" y="400" width="170" height="50" as="geometry" />
         </mxCell>
 
-        <!-- Helm Repos -->
+        <!-- HelmRepositories -->
         <mxCell id="hashicorp_repo" value="HelmRepository&#xa;hashicorp-repo&#xa;helm.releases.hashicorp.com" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1020" y="195" width="170" height="50" as="geometry" />
+          <mxGeometry x="1720" y="140" width="185" height="50" as="geometry" />
         </mxCell>
         <mxCell id="bitnami_repo" value="HelmRepository&#xa;bitnami-repo&#xa;oci://registry-1.docker.io" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1020" y="260" width="170" height="50" as="geometry" />
+          <mxGeometry x="1720" y="205" width="185" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="kuma_repo" value="HelmRepository&#xa;kuma-repo&#xa;kumahq.github.io/charts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="270" width="185" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="kyverno_repo" value="HelmRepository&#xa;kyverno-repo&#xa;kyverno.github.io/kyverno" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="335" width="185" height="50" as="geometry" />
         </mxCell>
 
-        <!-- vault-system -->
+        <!-- vault-system namespace -->
         <mxCell id="vault_ns_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f9dbc8;strokeColor=#d06020;arcSize=5;" vertex="1" parent="1">
-          <mxGeometry x="40" y="520" width="500" height="290" as="geometry" />
+          <mxGeometry x="40" y="540" width="510" height="300" as="geometry" />
         </mxCell>
         <mxCell id="vault_ns_label" value="vault-system namespace" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#7d3000;" vertex="1" parent="1">
-          <mxGeometry x="50" y="525" width="220" height="20" as="geometry" />
+          <mxGeometry x="50" y="545" width="220" height="20" as="geometry" />
         </mxCell>
-
         <mxCell id="vault_pod" value="Vault StatefulSet&#xa;vault-0 · v1.18.x&#xa;port 8200" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="60" y="560" width="150" height="65" as="geometry" />
+          <mxGeometry x="60" y="580" width="150" height="65" as="geometry" />
         </mxCell>
         <mxCell id="vault_pvc" value="PVC&#xa;data-vault-0&#xa;10Gi · standard" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="60" y="660" width="150" height="60" as="geometry" />
+          <mxGeometry x="60" y="680" width="150" height="60" as="geometry" />
         </mxCell>
         <mxCell id="vso_pod" value="Vault Secrets Operator&#xa;Deployment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="240" y="560" width="160" height="65" as="geometry" />
+          <mxGeometry x="250" y="580" width="160" height="65" as="geometry" />
         </mxCell>
-        <mxCell id="vault_conn" value="VaultConnection&#xa;dev-vault-connection&#xa;http://vault:8200&#xa;skipTLSVerify: true (dev)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="240" y="660" width="170" height="65" as="geometry" />
+        <mxCell id="vault_conn" value="VaultConnection&#xa;vault-connection&#xa;http://vault:8200&#xa;skipTLSVerify: true (dev)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="250" y="675" width="175" height="65" as="geometry" />
         </mxCell>
 
-        <!-- web-apps -->
+        <!-- kuma-system namespace -->
+        <mxCell id="kuma_ns_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#388e3c;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="580" y="540" width="310" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="kuma_ns_label" value="kuma-system namespace" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#1b5e20;" vertex="1" parent="1">
+          <mxGeometry x="590" y="545" width="230" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="kuma_pod" value="Kuma Control Plane&#xa;Deployment · v2.13.x&#xa;Mutating Webhook (port 5443)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#388e3c;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="598" y="575" width="274" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- kyverno namespace -->
+        <mxCell id="kyverno_ns_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#c62828;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="580" y="700" width="310" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="kyverno_ns_label" value="kyverno namespace" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#b71c1c;" vertex="1" parent="1">
+          <mxGeometry x="590" y="705" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="kyverno_pod" value="Kyverno Admission Controller&#xa;Deployment · v3.x.x&#xa;1 replica (dev)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8bbd0;strokeColor=#c62828;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="598" y="735" width="274" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- web-apps namespace -->
         <mxCell id="webapps_ns_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#1a6dbf;arcSize=5;" vertex="1" parent="1">
-          <mxGeometry x="600" y="520" width="580" height="290" as="geometry" />
+          <mxGeometry x="920" y="540" width="700" height="300" as="geometry" />
         </mxCell>
-        <mxCell id="webapps_ns_label" value="web-apps namespace" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#1a4a80;" vertex="1" parent="1">
-          <mxGeometry x="610" y="525" width="200" height="20" as="geometry" />
+        <mxCell id="webapps_ns_label" value="web-apps namespace  ·  kuma.io/sidecar-injection: enabled" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=13;fontStyle=1;fontColor=#1a4a80;" vertex="1" parent="1">
+          <mxGeometry x="930" y="545" width="430" height="20" as="geometry" />
         </mxCell>
-
-        <mxCell id="nginx_pod" value="NGINX Deployment&#xa;1 replica (dev)&#xa;nginx-server" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="980" y="560" width="150" height="65" as="geometry" />
+        <mxCell id="nginx_pod" value="NGINX Deployment&#xa;dev-nginx-server · 1 replica" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="575" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="kuma_sidecar" value="kuma-sidecar&#xa;(Envoy proxy · injected)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#388e3c;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="665" width="190" height="55" as="geometry" />
         </mxCell>
         <mxCell id="vault_auth" value="VaultAuth&#xa;dev-static-auth&#xa;kubernetes auth&#xa;role: vso-role · SA: nginx-server" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="620" y="560" width="175" height="70" as="geometry" />
+          <mxGeometry x="940" y="575" width="175" height="70" as="geometry" />
         </mxCell>
         <mxCell id="vault_static_secret" value="VaultStaticSecret&#xa;dev-nginx-db-secret&#xa;path: secret/nginx/database&#xa;refresh: 1h" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="620" y="660" width="175" height="70" as="geometry" />
+          <mxGeometry x="940" y="675" width="175" height="70" as="geometry" />
         </mxCell>
         <mxCell id="k8s_secret" value="Secret&#xa;nginx-db-secret&#xa;(synced by VSO)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="830" y="660" width="150" height="65" as="geometry" />
+          <mxGeometry x="1160" y="680" width="155" height="60" as="geometry" />
         </mxCell>
 
-        <!-- Edges -->
+        <!-- Legend -->
+        <mxCell id="legend_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="1660" y="540" width="200" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_title" value="Legend" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1670" y="550" width="100" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="l1" value="GitOps resource" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1670" y="578" width="170" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="l2" value="HelmRelease" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1670" y="612" width="170" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="l3" value="ConfigMap (values)" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1670" y="646" width="170" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="l4" value="Helm chart source" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1670" y="680" width="170" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="l5" value="Vault workload" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1670" y="714" width="170" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="l6" value="Kuma workload / sidecar" style="rounded=1;fillColor=#c8e6c9;strokeColor=#388e3c;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1670" y="748" width="170" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="l7" value="App workload" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1670" y="782" width="170" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="l8" value="Kubernetes Secret" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1670" y="816" width="170" height="26" as="geometry" />
+        </mxCell>
+
+        <!-- ===== EDGES ===== -->
+
         <!-- GitHub → GitRepository -->
-        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;" edge="1" source="github_repo" target="git_repo" parent="1">
-          <mxCell as="geometry" />
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#6c8ebf;" edge="1" source="github_repo" target="git_repo" parent="1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e1_label" value="fetch every 1m" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="e1">
           <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
@@ -125,76 +210,88 @@
 
         <!-- GitRepository → Kustomizations -->
         <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#b85450;" edge="1" source="git_repo" target="infra_kz" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#b85450;" edge="1" source="git_repo" target="apps_kz" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- dependsOn -->
+        <!-- apps_kz dependsOn infra_kz -->
         <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#b85450;dashed=1;" edge="1" source="apps_kz" target="infra_kz" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e4_label" value="dependsOn" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="e4">
           <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
         </mxCell>
 
-        <!-- apps_kz → HelmReleases -->
-        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#82b366;" edge="1" source="apps_kz" target="hr_vault" parent="1">
-          <mxCell as="geometry" />
+        <!-- infra_kz → infra HelmReleases -->
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#82b366;" edge="1" source="infra_kz" target="hr_vault" parent="1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#82b366;" edge="1" source="apps_kz" target="hr_vso" parent="1">
-          <mxCell as="geometry" />
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#82b366;" edge="1" source="infra_kz" target="hr_vso" parent="1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="e6b" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#82b366;" edge="1" source="infra_kz" target="hr_kuma" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6c" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#82b366;" edge="1" source="infra_kz" target="hr_kyverno" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- apps_kz → nginx HelmRelease -->
         <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#82b366;" edge="1" source="apps_kz" target="hr_nginx" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- HelmReleases → ConfigMaps -->
-        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#9673a6;" edge="1" source="hr_vault" target="cm_vault" parent="1">
-          <mxCell as="geometry" />
-        </mxCell>
-        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#9673a6;" edge="1" source="hr_vso" target="cm_vso" parent="1">
-          <mxCell as="geometry" />
-        </mxCell>
+        <!-- hr_nginx → ConfigMap -->
         <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#9673a6;" edge="1" source="hr_nginx" target="cm_nginx" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- HelmReleases → HelmRepos -->
+        <!-- HelmReleases → HelmRepositories -->
         <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#6c8ebf;" edge="1" source="hr_vault" target="hashicorp_repo" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#6c8ebf;" edge="1" source="hr_vso" target="hashicorp_repo" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#6c8ebf;" edge="1" source="hr_nginx" target="bitnami_repo" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13b" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#6c8ebf;" edge="1" source="hr_kuma" target="kuma_repo" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13c" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#6c8ebf;" edge="1" source="hr_kyverno" target="kyverno_repo" parent="1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- infra_kz → HelmRepos -->
-        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#6c8ebf;dashed=1;" edge="1" source="infra_kz" target="hashicorp_repo" parent="1">
-          <mxCell as="geometry" />
-        </mxCell>
-        <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#6c8ebf;dashed=1;" edge="1" source="infra_kz" target="bitnami_repo" parent="1">
-          <mxCell as="geometry" />
-        </mxCell>
-
-        <!-- HelmReleases → Pods -->
-        <mxCell id="e16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#d79b00;exitX=0.5;exitY=1;" edge="1" source="hr_vault" target="vault_pod" parent="1">
-          <mxCell as="geometry" />
+        <!-- HelmReleases → Pods (deploys) -->
+        <mxCell id="e16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#d79b00;" edge="1" source="hr_vault" target="vault_pod" parent="1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e16_label" value="deploys" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="e16">
           <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
         </mxCell>
-        <mxCell id="e17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#d79b00;exitX=0.5;exitY=1;" edge="1" source="hr_vso" target="vso_pod" parent="1">
-          <mxCell as="geometry" />
+        <mxCell id="e17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#d79b00;" edge="1" source="hr_vso" target="vso_pod" parent="1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e17_label" value="deploys" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="e17">
           <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
         </mxCell>
-        <mxCell id="e18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#6c8ebf;exitX=0.5;exitY=1;" edge="1" source="hr_nginx" target="nginx_pod" parent="1">
-          <mxCell as="geometry" />
+        <mxCell id="e17b" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#388e3c;" edge="1" source="hr_kuma" target="kuma_pod" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e17b_label" value="deploys" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="e17b">
+          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+        <mxCell id="e17c" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#c62828;" edge="1" source="hr_kyverno" target="kyverno_pod" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e17c_label" value="deploys" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="e17c">
+          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+        <mxCell id="e18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#6c8ebf;" edge="1" source="hr_nginx" target="nginx_pod" parent="1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e18_label" value="deploys" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="e18">
           <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
@@ -202,7 +299,7 @@
 
         <!-- Vault → PVC -->
         <mxCell id="e19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#d6b656;" edge="1" source="vault_pod" target="vault_pvc" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e19_label" value="mounts" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="e19">
           <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
@@ -210,12 +307,12 @@
 
         <!-- VSO → VaultConnection -->
         <mxCell id="e20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#9673a6;" edge="1" source="vso_pod" target="vault_conn" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
         <!-- VaultAuth → VaultConnection -->
         <mxCell id="e21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#9673a6;dashed=1;" edge="1" source="vault_auth" target="vault_conn" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e21_label" value="vaultConnectionRef" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="e21">
           <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
@@ -223,15 +320,15 @@
 
         <!-- VSO watches VaultAuth + VaultStaticSecret -->
         <mxCell id="e22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#9673a6;dashed=1;" edge="1" source="vso_pod" target="vault_auth" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#9673a6;dashed=1;" edge="1" source="vso_pod" target="vault_static_secret" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <!-- VSO reads Vault -->
+        <!-- VaultStaticSecret → Vault (reads secret) -->
         <mxCell id="e24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#d79b00;" edge="1" source="vault_static_secret" target="vault_pod" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e24_label" value="reads secret" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="e24">
           <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
@@ -239,7 +336,7 @@
 
         <!-- VaultStaticSecret → K8s Secret -->
         <mxCell id="e25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#82b366;" edge="1" source="vault_static_secret" target="k8s_secret" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e25_label" value="creates/refreshes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="e25">
           <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
@@ -247,39 +344,26 @@
 
         <!-- Secret → NGINX -->
         <mxCell id="e26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#6c8ebf;" edge="1" source="k8s_secret" target="nginx_pod" parent="1">
-          <mxCell as="geometry" />
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e26_label" value="mounted into" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="e26">
           <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
         </mxCell>
 
-        <!-- Legend -->
-        <mxCell id="legend_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;arcSize=5;" vertex="1" parent="1">
-          <mxGeometry x="1220" y="520" width="200" height="290" as="geometry" />
+        <!-- Kuma injects sidecar into NGINX pod -->
+        <mxCell id="e27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#388e3c;dashed=1;" edge="1" source="kuma_pod" target="kuma_sidecar" parent="1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="legend_title" value="Legend" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="1230" y="530" width="100" height="20" as="geometry" />
+        <mxCell id="e27_label" value="injects" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="e27">
+          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
         </mxCell>
-        <mxCell id="l1" value="GitOps resource" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1230" y="558" width="170" height="28" as="geometry" />
+
+        <!-- Kuma sidecar ↔ NGINX (mTLS proxy) -->
+        <mxCell id="e28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#388e3c;" edge="1" source="kuma_sidecar" target="nginx_pod" parent="1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="l2" value="HelmRelease" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1230" y="594" width="170" height="28" as="geometry" />
-        </mxCell>
-        <mxCell id="l3" value="ConfigMap (values)" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1230" y="630" width="170" height="28" as="geometry" />
-        </mxCell>
-        <mxCell id="l4" value="Helm chart source" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1230" y="666" width="170" height="28" as="geometry" />
-        </mxCell>
-        <mxCell id="l5" value="Vault workload" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1230" y="702" width="170" height="28" as="geometry" />
-        </mxCell>
-        <mxCell id="l6" value="App workload" style="rounded=1;fillColor=#cce5ff;strokeColor=#1a6dbf;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1230" y="738" width="170" height="28" as="geometry" />
-        </mxCell>
-        <mxCell id="l7" value="Kubernetes Secret" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1230" y="774" width="170" height="28" as="geometry" />
+        <mxCell id="e28_label" value="mTLS proxy" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="e28">
+          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
         </mxCell>
 
       </root>
