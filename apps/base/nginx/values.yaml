@@ -6,5 +6,6 @@ metadata:
 data:
   defaults.yaml: |
     replicaCount: 2
+    automountServiceAccountToken: true
     service:
       type: ClusterIP
