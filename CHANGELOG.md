@@ -2,6 +2,27 @@
 
 ## [Unreleased]
 
+## 2026-04-23
+
+### Added
+- Kuma service mesh (chart `kuma` v2.x.x) deployed as infrastructure controller under `apps/infrastructure/dev/controllers/kuma.yaml` targeting `kuma-system`.
+- Kyverno policy engine (chart `kyverno` v3.x.x) deployed as infrastructure controller under `apps/infrastructure/dev/controllers/kyverno.yaml` targeting `kyverno`.
+- HelmRepository sources for Kuma (`kumahq.github.io/charts`) and Kyverno (`kyverno.github.io/kyverno/`).
+- `kuma-system` and `kyverno` namespace definitions.
+- `kuma.io/sidecar-injection: enabled` label on `web-apps` namespace to enable automatic Kuma sidecar injection for application pods.
+- `automountServiceAccountToken: true` added to nginx base values so the `kuma-sidecar` container can read the ServiceAccount token to authenticate with the Kuma control plane.
+
+### Changed
+- Moved Vault and Vault Secrets Operator from `apps/base/` to `apps/infrastructure/dev/controllers/` — they are platform services, not application workloads.
+- Moved `VaultConnection` and RBAC manifests alongside the operator in `apps/infrastructure/dev/controllers/`.
+- Inlined Helm values directly in controller HelmReleases, removing the ConfigMap + `valuesFrom` indirection for infrastructure components.
+- `VaultConnection.skipTLSVerify` is now set to `true` directly in the dev controller manifest rather than via overlay patch.
+- VSO ClusterRoleBinding service account corrected from `dev-vault-secrets-operator` to `vault-secrets-operator` (no longer prefixed by the overlay `namePrefix`).
+- Dev overlay (`apps/overlays/dev/`) now manages only nginx; vault-related bases, ConfigMap generators, and patches removed.
+
+### Fixed
+- `kuma.io/sidecar-injection` was set as an annotation instead of a label — Kuma's mutating webhook `namespaceSelector` matches namespace labels, not annotations.
+
 ## 2026-04-11
 
 ### Changed

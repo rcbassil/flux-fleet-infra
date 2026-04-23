@@ -14,16 +14,22 @@ flowchart TD
         APPS["Kustomization\ndev-apps-sync\ninterval: 10m · wait: true"]
     end
 
-    subgraph infra["Infrastructure layer"]
+    subgraph infra["Infrastructure layer (dev-infra-sync)"]
         NS1["Namespace\nvault-system"]
-        NS2["Namespace\nweb-apps"]
+        NS2["Namespace\nweb-apps\n(kuma injection: enabled)"]
+        NS3["Namespace\nkuma-system"]
+        NS4["Namespace\nkyverno"]
         REPO1["HelmRepository\nhashicorp-repo"]
         REPO2["HelmRepository\nbitnami-repo"]
+        REPO3["HelmRepository\nkuma-repo"]
+        REPO4["HelmRepository\nkyverno-repo"]
+        HR_V["HelmRelease\nvault"]
+        HR_VSO["HelmRelease\nvault-secrets-operator\ndependsOn: vault"]
+        HR_K["HelmRelease\nkuma"]
+        HR_KY["HelmRelease\nkyverno"]
     end
 
-    subgraph releases["HelmReleases (flux-system)"]
-        HR_V["HelmRelease\ndev-vault"]
-        HR_VSO["HelmRelease\ndev-vault-secrets-operator\ndependsOn: dev-vault"]
+    subgraph apps["Application layer (dev-apps-sync)"]
         HR_N["HelmRelease\ndev-nginx-server"]
     end
 
@@ -31,10 +37,14 @@ flowchart TD
     GR --> INFRA
     GR --> APPS
     APPS -->|"dependsOn"| INFRA
-    INFRA --> NS1 & NS2 & REPO1 & REPO2
-    APPS --> HR_V & HR_VSO & HR_N
+    INFRA --> NS1 & NS2 & NS3 & NS4
+    INFRA --> REPO1 & REPO2 & REPO3 & REPO4
+    INFRA --> HR_V & HR_VSO & HR_K & HR_KY
+    APPS --> HR_N
     REPO1 -->|"chart source"| HR_V & HR_VSO
     REPO2 -->|"chart source"| HR_N
+    REPO3 -->|"chart source"| HR_K
+    REPO4 -->|"chart source"| HR_KY
 ```
 
 ---
@@ -45,15 +55,25 @@ What gets deployed into each namespace.
 
 ```mermaid
 flowchart TD
+    subgraph kuma-system["kuma-system"]
+        KUMA["Kuma Control Plane\nDeployment\nv2.13.x"]
+        KWEB["Mutating Webhook\nnmspaceSelector:\nkuma.io/sidecar-injection=enabled"]
+    end
+
+    subgraph kyverno["kyverno"]
+        KYV["Kyverno Admission Controller\nDeployment\n1 replica (dev)"]
+    end
+
     subgraph vault-system["vault-system"]
         VAULT["Vault\nStatefulSet\nvault-0\nv1.18.x"]
         PVC["PVC\ndata-vault-0\n10Gi · standard StorageClass"]
         VSO["Vault Secrets Operator\nDeployment"]
-        VC["VaultConnection\ndev-vault-connection\nhttp://vault.vault-system:8200\nskipTLSVerify: true ①"]
+        VC["VaultConnection\nvault-connection\nhttp://vault.vault-system:8200\nskipTLSVerify: true"]
     end
 
-    subgraph web-apps["web-apps"]
+    subgraph web-apps["web-apps  (kuma.io/sidecar-injection: enabled)"]
         NGINX["NGINX\nDeployment\n1 replica (dev)"]
+        SIDECAR["kuma-sidecar\nEnvoy proxy"]
         VA["VaultAuth\ndev-static-auth\nKubernetes auth · role: vso-role"]
         VSS["VaultStaticSecret\ndev-nginx-db-secret\npath: secret/nginx/database\nrefresh: 1h"]
         SEC["Secret\nnginx-db-secret"]
@@ -67,8 +87,9 @@ flowchart TD
     VSS -->|"fetches credentials"| VAULT
     VSS -->|"creates & refreshes"| SEC
     SEC -->|"mounted into"| NGINX
-
-    note1["① dev overlay patches\nskipTLSVerify to true.\nBase default is false."]
+    KUMA -->|"injects"| SIDECAR
+    SIDECAR -.->|"mTLS proxy"| NGINX
+    KWEB -->|"intercepts pod create\nin labeled namespaces"| SIDECAR
 ```
 
 ---
@@ -101,22 +122,22 @@ sequenceDiagram
 
 ---
 
-## 4. Base/Overlay Values Pattern
+## 4. Base/Overlay Values Pattern (Applications)
 
-How Helm values are layered across environments.
+How Helm values are layered across environments for application workloads.
 
 ```mermaid
 flowchart LR
-    subgraph base["apps/base/vault/"]
-        BV["values.yaml\nConfigMap\nkey: defaults.yaml\n─────────────────\ndataStorage:\n  enabled: true\n  size: 10Gi\n  storageClass: ''\n  ..."]
+    subgraph base["apps/base/nginx/"]
+        BV["values.yaml\nConfigMap\nkey: defaults.yaml\n─────────────────\nreplicaCount: 2\nautomountServiceAccountToken: true\nservice.type: ClusterIP"]
     end
 
     subgraph overlay["apps/overlays/dev/"]
-        OV["vault-values.yaml\n─────────────────\nserver:\n  dev.enabled: false\n  affinity: ''\ninjector:\n  affinity: ''"]
-        KZ["kustomization.yaml\nconfigMapGenerator\nbehavior: merge\noverrides.yaml=vault-values.yaml"]
+        OV["nginx-values.yaml\n─────────────────\nreplicaCount: 1"]
+        KZ["kustomization.yaml\nconfigMapGenerator\nbehavior: merge\noverrides.yaml=nginx-values.yaml"]
     end
 
-    subgraph merged["Merged ConfigMap in cluster\ndev-vault-values"]
+    subgraph merged["Merged ConfigMap in cluster\ndev-nginx-values"]
         M1["key: defaults.yaml → base content"]
         M2["key: overrides.yaml → dev content"]
     end
@@ -132,6 +153,8 @@ flowchart LR
     F1 & F2 -->|"merged by Helm"| HELM["Helm chart values"]
 ```
 
+Infrastructure controllers (Vault, Kuma, Kyverno) use inline `values:` in their HelmRelease instead of this pattern — no ConfigMap indirection needed since they are single-environment.
+
 ---
 
 ## 5. Repository Layout
@@ -142,24 +165,27 @@ flux-fleet-infra/
 │   └── my-local-cluster/
 │       ├── flux-system/          ← Flux bootstrap (generated, do not edit)
 │       └── dev/
-│           ├── infra.yaml        ← Kustomization → apps/infrastructure/dev
-│           └── apps.yaml         ← Kustomization → apps/overlays/dev
+│           ├── infra.yaml        ← Kustomization → apps/infrastructure/dev (1h)
+│           └── apps.yaml         ← Kustomization → apps/overlays/dev (10m, dependsOn infra)
 │
 └── apps/
     ├── infrastructure/
     │   └── dev/
-    │       ├── namespaces/       ← vault-system, web-apps
-    │       └── sources/          ← HelmRepository (hashicorp, bitnami)
+    │       ├── sources/          ← HelmRepository (hashicorp, bitnami, kuma, kyverno)
+    │       ├── namespaces/       ← vault-system, web-apps, kuma-system, kyverno
+    │       └── controllers/      ← HelmReleases with inline values
+    │           ├── vault.yaml
+    │           ├── vault-operator.yaml
+    │           ├── vault-connection.yaml
+    │           ├── vault-rbac.yaml
+    │           ├── kuma.yaml
+    │           └── kyverno.yaml
     │
     ├── base/
-    │   ├── vault/                ← HelmRelease + defaults ConfigMap
-    │   ├── vault-operator/       ← HelmRelease + defaults ConfigMap + VaultConnection + RBAC
     │   └── nginx/                ← HelmRelease + defaults ConfigMap + VaultAuth + VaultStaticSecret
     │
     └── overlays/
         └── dev/
-            ├── kustomization.yaml          ← namePrefix: dev-, configMapGenerator, patches
-            ├── vault-values.yaml           ← dev overrides (affinity, dev mode)
-            ├── vault-operator-values.yaml  ← dev overrides (Vault address)
-            └── nginx-values.yaml           ← dev overrides (1 replica)
+            ├── kustomization.yaml   ← namePrefix: dev-, configMapGenerator, patches
+            └── nginx-values.yaml    ← dev overrides (1 replica)
 ```
