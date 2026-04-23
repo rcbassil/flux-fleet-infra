@@ -5,7 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   releaseName: vault
-  targetNamespace: vault-system # It's cleaner to isolate Vault
+  targetNamespace: vault-system
   interval: 15m
   install:
     remediation:
@@ -21,11 +21,16 @@ spec:
         kind: HelmRepository
         name: hashicorp-repo
         namespace: flux-system
-  valuesFrom:
-    - kind: ConfigMap
-      name: vault-values
-      valuesKey: defaults.yaml
-    - kind: ConfigMap
-      name: vault-values
-      valuesKey: overrides.yaml
-      optional: true
+  values:
+    server:
+      dev:
+        enabled: false
+      affinity: ""
+      dataStorage:
+        enabled: true
+        size: "10Gi"
+        mountPath: "/vault/data"
+        storageClass: "standard"
+        accessMode: ReadWriteOnce
+    injector:
+      affinity: ""

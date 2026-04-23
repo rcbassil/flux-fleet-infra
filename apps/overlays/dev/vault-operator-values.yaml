@@ -1,3 +1,0 @@
-# Dev-specific overrides — base defaults.yaml enables defaultVaultConnection
-defaultVaultConnection:
-  address: "http://vault.vault-system.svc.cluster.local:8200"

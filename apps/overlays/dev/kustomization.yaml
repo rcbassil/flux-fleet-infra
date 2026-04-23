@@ -2,35 +2,17 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../base/nginx
-  - ../../base/vault
-  - ../../base/vault-operator
 namePrefix: dev-
 commonLabels:
   env: development
-# Generate a new version of the ConfigMap for Dev
 configMapGenerator:
   - name: nginx-values
     namespace: flux-system
     behavior: merge
     files:
-      - overrides.yaml=nginx-values.yaml # adds "overrides.yaml" key, base keeps "defaults.yaml"
+      - overrides.yaml=nginx-values.yaml
     options:
       disableNameSuffixHash: true
-  - name: vault-values
-    namespace: flux-system
-    behavior: merge
-    files:
-      - overrides.yaml=vault-values.yaml # adds "overrides.yaml" key, base keeps "defaults.yaml"
-    options:
-      disableNameSuffixHash: true
-  - name: vault-operator-values
-    namespace: flux-system
-    behavior: merge
-    files:
-      - overrides.yaml=vault-operator-values.yaml # adds "overrides.yaml" key, base keeps "defaults.yaml"
-    options:
-      disableNameSuffixHash: true
-# Manually tell the HelmRelease to look for the prefixed ConfigMap
 patches:
   - target:
       kind: HelmRelease
@@ -42,36 +24,6 @@ patches:
       - op: replace
         path: /spec/valuesFrom/1/name
         value: dev-nginx-values
-  - target:
-      kind: HelmRelease
-      name: vault
-    patch: |
-      - op: replace
-        path: /spec/valuesFrom/0/name
-        value: dev-vault-values
-      - op: replace
-        path: /spec/valuesFrom/1/name
-        value: dev-vault-values
-  - target:
-      kind: HelmRelease
-      name: vault-secrets-operator
-    patch: |
-      - op: replace
-        path: /spec/valuesFrom/0/name
-        value: dev-vault-operator-values
-      - op: replace
-        path: /spec/valuesFrom/1/name
-        value: dev-vault-operator-values
-      - op: replace
-        path: /spec/dependsOn/0/name
-        value: dev-vault
-  - target:
-      kind: VaultConnection
-      name: vault-connection
-    patch: |
-      - op: replace
-        path: /spec/skipTLSVerify
-        value: true
   - target:
       kind: VaultStaticSecret
       name: nginx-db-secret
@@ -85,4 +37,4 @@ patches:
     patch: |
       - op: replace
         path: /spec/vaultConnectionRef
-        value: vault-system/dev-vault-connection
+        value: vault-system/vault-connection

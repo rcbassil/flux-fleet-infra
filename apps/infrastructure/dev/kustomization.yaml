@@ -4,5 +4,15 @@ kind: Kustomization
 resources:
   - sources/bitnami-repo.yaml  # Reference the repo here instead of in the apps base
   - sources/hashicorp-repo.yaml
+  - sources/kuma-repo.yaml
+  - sources/kyverno-repo.yaml
   - namespaces/web-apps.yaml
   - namespaces/vault-system.yaml
+  - namespaces/kuma-system.yaml
+  - namespaces/kyverno.yaml
+  - controllers/vault.yaml
+  - controllers/vault-operator.yaml
+  - controllers/vault-connection.yaml
+  - controllers/vault-rbac.yaml
+  - controllers/kuma.yaml
+  - controllers/kyverno.yaml

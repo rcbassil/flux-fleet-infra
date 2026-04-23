@@ -19,5 +19,5 @@ roleRef:
   name: vso-global-reader
 subjects:
 - kind: ServiceAccount
-  name: dev-vault-secrets-operator # Must match your Operator SA name
+  name: vault-secrets-operator
   namespace: vault-system

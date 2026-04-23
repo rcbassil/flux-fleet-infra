@@ -8,7 +8,13 @@ spec:
   targetNamespace: vault-system
   interval: 30m
   dependsOn:
-    - name: vault # Ensures Vault is up before the operator tries to connect
+    - name: vault
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
   chart:
     spec:
       chart: vault-secrets-operator
@@ -17,11 +23,7 @@ spec:
         kind: HelmRepository
         name: hashicorp-repo
         namespace: flux-system
-  valuesFrom:
-    - kind: ConfigMap
-      name: vault-operator-values
-      valuesKey: defaults.yaml
-    - kind: ConfigMap
-      name: vault-operator-values
-      valuesKey: overrides.yaml
-      optional: true
+  values:
+    defaultVaultConnection:
+      enabled: true
+      address: "http://vault.vault-system.svc.cluster.local:8200"
